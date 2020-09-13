@@ -34,8 +34,7 @@ def links_to_rechts(letter,links,rechts):
 
 def rechts_to_links(letter,links,rechts):
     if letter == "b":
-        rechts.remove(letter)
-        links.append(letter)
+        boer_to_links(links,rechts)
     elif("b" in rechts):
         if(letter in rechts):
             rechts.remove(letter)
@@ -44,37 +43,59 @@ def rechts_to_links(letter,links,rechts):
             links.append("b")
             return True
 
-def boer_to_links():
+def boer_to_links(links,rechts):
     if("b" in rechts):
             rechts.remove("b") 
             links.append("b")
 
-
+#functie om states te checken is redelijk onefficient, deze kon op een andere manier vast veel beter.
 def check_state(links,rechts):
-    if "v" in rechts and "k" in rechts and "b" in rechts:
+    if check_state_already_added(links,rechts):
+        return False
+
+    if "v" in rechts and "k" in rechts and "b" in rechts and "g" in rechts:
+        states.append([links,rechts])
+        print("somehow we got it, printing states:")
+        for i in states:
+            print(i)
         return True
-    
     if "g" in links and "v" in links and  "b" in links and "k" in links:
         return False
     if "g" in links and "v" in links and "b" not in links:
         return False
-    if"g" in links and "k" in links and "b" not in links:
+    if "g" in links and "k" in links and "b" not in links:
         return False
-    else:
-        if "g" in rechts and "v" in rechts and "b" not in rechts:
-            return False
-        elif "g" in rechts and "k" in rechts and "b" not in rechts:
-            return False
-        else:
-            return True
-        
+   
+    if "g" in rechts and "v" in rechts and "b" not in rechts:
+        return False
+    if "g" in rechts and "k" in rechts and "b" not in rechts:
+        return False
+    
+    return True
+
+#deze kan vast ook zonder for loop worden gecheckt achja.
+def check_state_already_added(links1,rechts1): 
+    print("check of state al is toegevoegd")
+    for i in states:
+        #if links1 in i[0] and rechts1 in i[1]:
+        if links1 == i[0]:
+            if rechts1 == i[1]:
+                print(i[0], i[1])
+                print(links1,rechts1)
+                print("state al in lijst")
+                return True
+    
+    return False
+
+
+
 #isfinished funcite
 
 def uitwerkings_functie(links,rechts,steps):
-    if"g" in rechts and "k" in rechts and "b" in rechts and "v" in rechts:
-        print("finished") 
-        exit
-
+    if("g" in rechts and "k" in rechts and "b" in rechts and "v" in rechts):
+        print("finished")
+        exit()
+       
     stap = steps
     states.append([links,rechts])
     print(states)
@@ -112,7 +133,7 @@ def uitwerkings_functie(links,rechts,steps):
     
         
 uitwerkings_functie(links,rechts,0)   
-print(states)   
+
 
        
 
