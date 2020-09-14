@@ -123,8 +123,9 @@ def uitwerkings_functie(links,rechts,steps):
             else:
                 print("fout")
                 
-                
-                
+#tijdcomplexiteit is volgens mij                 
+#
+# O(b^d) for implicit graphs with branching factor b searched to depth d            
                     
 
      
