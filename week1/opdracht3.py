@@ -1,5 +1,7 @@
+#variable for when end point has been reached
 finished = False
 
+#board variable
 s =[
 [0,0,0,0,0,0,0,0,81],
 [0,0,46,45,0,55,74,0,0], 
@@ -12,10 +14,11 @@ s =[
 [0,0,0,0,0,0,0,0,0]
 ]
 
-print(s)
+#list for storage of neighbouring positions
 neighbourlist=[]
 #vindt een pad van 1 naar 81
 
+#function for filling neighbourlist with location of neighbours from specified location on board.
 def get_neighbours(x,y):
     neighbourlist=[]
 
@@ -40,7 +43,7 @@ def get_neighbours(x,y):
 
     return neighbourlist
 
-
+# called when endpoint is reached, print filled board and set variable to true for ending the recursive solve function.
 def print_endresult(board):
    
     for i in board:
@@ -49,7 +52,7 @@ def print_endresult(board):
     finished = True
     
 
-#start met clue 1.
+# funciton for solving numbrix puzzle, startpoint required
 def solve(posx,posy,steps,clue,board):
     #in het board
     #zoek je mogelijke paden.
@@ -82,10 +85,10 @@ def solve(posx,posy,steps,clue,board):
         else:
             return False   
 
-#find starting position 
+#find starting position and solve numbrixpuzzle from starting position.
 for i in s:
     if 1 in i:
-        
+        print("start positie:")
         print("x:" , i.index(1))
         print("y:" , s.index(i))
         solve(i.index(1),s.index(i),1,1,s)

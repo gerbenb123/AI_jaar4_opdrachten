@@ -22,7 +22,7 @@ statecachelinks = []
 statecacherechts = []
 
 
-
+# function for moving farmer and  other objects from left to right.
 def links_to_rechts(letter,links,rechts):
         if(letter in links):
             links.remove(letter)
@@ -31,7 +31,7 @@ def links_to_rechts(letter,links,rechts):
             rechts.append("b")
             return True
         
-
+# function for moving farmer and  other objects from right to left.
 def rechts_to_links(letter,links,rechts):
     if letter == "b":
         boer_to_links(links,rechts)
@@ -43,6 +43,7 @@ def rechts_to_links(letter,links,rechts):
             links.append("b")
             return True
 
+#function for moving only the farmer from right to left.
 def boer_to_links(links,rechts):
     if("b" in rechts):
             rechts.remove("b") 
@@ -73,7 +74,7 @@ def check_state(links,rechts):
     
     return True
 
-#deze kan vast ook zonder for loop worden gecheckt achja.
+#Function to check if state have already been added.
 def check_state_already_added(links1,rechts1): 
     print("check of state al is toegevoegd")
     for i in states:
@@ -88,9 +89,7 @@ def check_state_already_added(links1,rechts1):
     return False
 
 
-
-#isfinished funcite
-
+#function for solving the rivercrossing puzzle.
 def uitwerkings_functie(links,rechts,steps):
     if("g" in rechts and "k" in rechts and "b" in rechts and "v" in rechts):
         print("finished")
@@ -126,12 +125,6 @@ def uitwerkings_functie(links,rechts,steps):
 #tijdcomplexiteit is volgens mij                 
 #
 # O(b^d) for implicit graphs with branching factor b searched to depth d            
-                    
-
-     
-
-    
-    
         
 uitwerkings_functie(links,rechts,0)   
 
