@@ -72,14 +72,12 @@ def solve(posx,posy,steps,clue,board):
 
                 return solve(i[0],i[1],steps+1,clue+1,board_copy1)
                 
-                
-    
         for i in move_list:
             if board_copy1[i[1]][i[0]] == 0:
                 board_copy1[i[1]][i[0]] = int(steps+1)
                 if not solve(i[0],i[1],steps+1,clue+1,board_copy1):
                     board_copy1[i[1]][i[0]] = 0
-            
+        #check if end was reached.    
         if finished == True:
             return True
         else:
