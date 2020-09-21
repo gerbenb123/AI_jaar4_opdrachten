@@ -2,9 +2,9 @@
 # B) 1.733 seconden en een afstand van 19627.5
 # C) Hoe je een intersectie tussen twee edges kan vinden staat uitgelegd in de functie "check_crossing".
 # Bij het verwijderen van een kruizing moet er gelet worden op dat de dichstbijzijnde steden worden gekoppeld aan elkaar.
-#
-#
-#
+# D) Weer tussen de 0 en 10 procent. Hij is wel zo'n 10x zo langzaam geworden (10 tot 20 seconden)
+# E) O(n^2) want voor elke city_tour moet hij nu elke andere city_tour checken op kruizingen.
+
 
 
 import matplotlib.pyplot as plt
@@ -28,7 +28,7 @@ def try_all_tours(cities):
     tours = alltours(cities)
     return min(tours, key=tour_length)
 
-
+# The nearest neighbour algorithm searches the nearest city to another city that isn't already in the path
 def nearest_neighbour(cities):
     visited_cities = []
     initial_city = next(iter(cities))
@@ -47,33 +47,56 @@ def nearest_neighbour(cities):
 
     return visited_cities
 
+# The two opt algorithm removes all crossings between edges and makes the total path even shorter.
 def two_opt(cities):
     city_path = nearest_neighbour(cities)
-
     # checks all the edges on possible intersections (this makes it way slower when the amount of cities become higher)
     index = 0
-    #TODO(final to the first node should also be taken in the equation)
-    while index != len(city_path) -1:
-        for city_index in range(0, len(city_path)-1):
+    while index < (len(cities) - 1):
+        index = 0
+        for i in range(0, len(city_path)):
             index += 1
-            for other_city_index in range(0, len(city_path)-1):
-                if abs(city_index - other_city_index) > 2 and check_crossing([city_path[city_index], city_path[city_index + 1], city_path[other_city_index], city_path[other_city_index + 1]]):
+            for o in range(0, len(city_path)):
+                city_index = i
+                next_city_index = i + 1
+                other_city_index = o
+                next_other_city_index = o + 1
+                if i == len(city_path) - 1:
+                    next_city_index = 0
+                if o == len(city_path) - 1:
+                    next_other_city_index = 0
+
+                if abs(city_index - other_city_index) > 2 and check_crossing(
+                        [city_path[city_index], city_path[next_city_index], city_path[other_city_index],
+                         city_path[next_other_city_index]]):
                     # replaces edges between cities
-                    if distance(city_path[city_index], city_path[other_city_index]) + distance(city_path[city_index + 1], city_path[other_city_index + 1]) < distance(city_path[city_index + 1], city_path[other_city_index]) + distance(city_path[city_index], city_path[other_city_index + 1]):
-                        new_city_value = city_path[city_index + 1]
+                    index = 0
+                    if distance(city_path[city_index], city_path[other_city_index]) + distance(city_path[next_city_index],
+                                                                                               city_path[
+                                                                                                   next_other_city_index]) < distance(
+                            city_path[next_city_index], city_path[other_city_index]) + distance(city_path[city_index],
+                                                                                                city_path[
+                                                                                                    next_other_city_index]):
+                        new_city_value = city_path[next_city_index]
                         new_other_city_value = city_path[other_city_index]
                         city_path[other_city_index] = new_city_value
-                        city_path[city_index + 1] = new_other_city_value
+                        city_path[next_city_index] = new_other_city_value
+                        city_path = reverse_path(city_path, next_city_index + 1, other_city_index)
+
                     else:
                         new_city_value = city_path[city_index]
                         new_other_city_value = city_path[other_city_index]
                         city_path[other_city_index] = new_city_value
                         city_path[city_index] = new_other_city_value
-                    index = 0
-                    break
-            if index == 0:
-                break
+                        city_path = reverse_path(city_path, next_city_index, other_city_index)
+    return city_path
 
+
+def reverse_path(city_path, index_one, index_two):
+    if index_one <= index_two:
+        city_path[index_one: index_two] = reversed(city_path[index_one: index_two])
+    else:
+        city_path[index_two: index_one] = reversed(city_path[index_two: index_one])
     return city_path
 
 
@@ -169,7 +192,7 @@ def plot_tsp(algorithm, cities):
 
 
 if __name__ == '__main__':
-    seed = make_cities(20)
+    seed = make_cities(500)
     # plot_tsp(try_all_tours, seed)
 
     plot_tsp(nearest_neighbour, seed)

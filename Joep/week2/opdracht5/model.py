@@ -4,7 +4,6 @@ import math
 
 MAX_DEPTH = 2
 
-
 def merge_left(b):
     # merge the board left
     # this is the funcyoin that is reused in the other merges
