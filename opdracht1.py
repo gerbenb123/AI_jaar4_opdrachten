@@ -17,3 +17,4 @@ for a in list(permutations):
                 if a.index("J") > a.index("N")+1 or a.index("J") < a.index("N")-1:
                     if a.index("N") > a.index("M")+1 or a.index("N") < a.index("M")-1:
                         print(a)
+                        
