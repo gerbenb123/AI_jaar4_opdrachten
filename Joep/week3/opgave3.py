@@ -31,7 +31,7 @@ peers = dict((s, set(sum(units[s],[]))-set([s])) for s in cells)
 def test():
     # a set of tests that must pass
     assert len(cells) == 81
-    assert len(unitlist) == 27
+    assert len(unit_list) == 27
     assert all(len(units[s]) == 3 for s in cells)
     assert all(len(peers[s]) == 20 for s in cells)
     assert units['C2'] == [['A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2', 'I2'],
@@ -79,6 +79,7 @@ def no_conflict(grid, c, v):
     return True
 
 def solve(grid):
+    display(grid)
     # backtracking search a solution (DFS)
     if all(len(value) == 1 for value in grid.values()):
         display(grid)
@@ -89,7 +90,7 @@ def solve(grid):
         if len(str(value)) > 1:
             key = key
 
-    for value in [int(a) for a in digits]:
+    for value in [a for a in digits]:
         if no_conflict(grid, key, value):
             new_grid = grid.copy()
             new_grid[key] = value
@@ -100,23 +101,22 @@ def solve(grid):
 
 
 def make_arc_consistent(grid, c, v):
+    # for some reason it doesn't go out of the loop
+    display(grid)
+
+    new_grid = grid.copy()
     for peer in peers[c]:
-        if str(v) in peer:
-            if len(peer) <= 1:
+        if str(v) in str(new_grid[peer]):
+            if len(str(new_grid[peer])) <= 1:
                 return False
             else:
-                peer.strip(str(v))
+                new_grid[peer] = new_grid[peer].replace(str(v), '')
 
-    #TODO here should be a check if grid has changed.
-    all_cells_arc_consistent = []
-    for key, value in grid.items():
-        if len(value) == 1 and make_arc_consistent(grid, key, value):
-             all_cells_arc_consistent.append(True)
-        else:
-            all_cells_arc_consistent.append(False)
-    if not all(all_cells_arc_consistent):
-        return False
-
+    if new_grid != grid:
+        for key, value in new_grid.items():
+            if len(str(value)) == 1 and key != c:
+                if not make_arc_consistent(new_grid, key, value):
+                    return False
     return True
 
 
