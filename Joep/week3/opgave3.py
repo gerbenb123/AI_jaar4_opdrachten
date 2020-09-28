@@ -79,18 +79,17 @@ def no_conflict(grid, c, v):
     return True
 
 def solve(grid):
-    display(grid)
     # backtracking search a solution (DFS)
     if all(len(value) == 1 for value in grid.values()):
         display(grid)
         return True
 
     key = ''
-    for key, value in grid.items():
-        if len(str(value)) > 1:
-            key = key
+    for iter_key in grid.keys():
+        if len(str(grid[iter_key])) > 1:
+            key = iter_key
 
-    for value in [a for a in digits]:
+    for value in grid[key]:
         if no_conflict(grid, key, value):
             new_grid = grid.copy()
             new_grid[key] = value
@@ -101,22 +100,23 @@ def solve(grid):
 
 
 def make_arc_consistent(grid, c, v):
-    # for some reason it doesn't go out of the loop
-    display(grid)
+    if all(len(value) == 1 for value in grid.values()):
+        return True
 
     new_grid = grid.copy()
     for peer in peers[c]:
-        if str(v) in str(new_grid[peer]):
-            if len(str(new_grid[peer])) <= 1:
+        if str(v) in str(grid[peer]):
+            if len(str(grid[peer])) <= 1:
                 return False
             else:
-                new_grid[peer] = new_grid[peer].replace(str(v), '')
+                grid[peer] = grid[peer].replace(str(v), '')
 
     if new_grid != grid:
-        for key, value in new_grid.items():
+        for key, value in grid.items():
             if len(str(value)) == 1 and key != c:
-                if not make_arc_consistent(new_grid, key, value):
+                if not make_arc_consistent(grid, key, value):
                     return False
+
     return True
 
 
