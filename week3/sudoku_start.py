@@ -93,9 +93,9 @@ def check_if_completed(grid):
 def solve(grid):
     # backtracking search a solution (DFS)
     #print(display(grid))
-    #stap 1: 
-    #voor elke lege cell: check of number assignen mag.
-    if check_if_completed(grid):
+   
+    if check_if_completed(grid):    
+        display(grid)
         return True
 
     for x in grid:
@@ -106,13 +106,15 @@ def solve(grid):
                 #check of assignment mag
                 if no_conflict(grid,x,n):
                     #assign waarde
-                    grid[x]=n
+                    grid_copy = grid.copy()
+                    grid_copy[x]=n
 
                     #recursief volgende stappen proberen
-                    if arc_consistency(grid, x, n):
-                        if solve(grid):
+                    if arc_consistency(grid_copy, x, n):
+                        if solve(grid_copy):
                             return True
-                        #grid[x] ='123456789'
+                    #weg gehaaald wegens gebruik van copy
+                    #grid[x] ='123456789'
             return False
     
     pass
@@ -192,7 +194,6 @@ def arc_consistency(grid, c, v):
     return True
 
 
-
 # minimum nr of clues for a unique solution is 17
 slist = [None for x in range(20)]
 slist[0] = '.56.1.3....16....589...7..4.8.1.45..2.......1..42.5.9.1..4...899....16....3.6.41.'
@@ -222,10 +223,7 @@ for i,sudo in enumerate(slist):
     d = parse_string_to_dict(sudo)
     start_time = time.time()
     #display(d)
-    if solve(d):
-        print("gelukt")
-        display(d)
-        
+    solve(d)
     end_time = time.time()
     hours, rem = divmod(end_time-start_time, 3600)
     minutes, seconds = divmod(rem, 60)
