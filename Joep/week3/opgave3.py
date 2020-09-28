@@ -80,8 +80,45 @@ def no_conflict(grid, c, v):
 
 def solve(grid):
     # backtracking search a solution (DFS)
-    # your code here
-    pass
+    if all(len(value) == 1 for value in grid.values()):
+        display(grid)
+        return True
+
+    key = ''
+    for key, value in grid.items():
+        if len(str(value)) > 1:
+            key = key
+
+    for value in [int(a) for a in digits]:
+        if no_conflict(grid, key, value):
+            new_grid = grid.copy()
+            new_grid[key] = value
+            if make_arc_consistent(new_grid, key, value):
+                if solve(new_grid):
+                    return True
+    return False
+
+
+def make_arc_consistent(grid, c, v):
+    for peer in peers[c]:
+        if str(v) in peer:
+            if len(peer) <= 1:
+                return False
+            else:
+                peer.strip(str(v))
+
+    #TODO here should be a check if grid has changed.
+    all_cells_arc_consistent = []
+    for key, value in grid.items():
+        if len(value) == 1 and make_arc_consistent(grid, key, value):
+             all_cells_arc_consistent.append(True)
+        else:
+            all_cells_arc_consistent.append(False)
+    if not all(all_cells_arc_consistent):
+        return False
+
+    return True
+
 
 # minimum nr of clues for a unique solution is 17
 slist = [None for x in range(20)]
@@ -106,14 +143,15 @@ slist[17]= '..5...987.4..5...1..7......2...48....9.1.....6..2.....3..6..2.......
 slist[18]= '3.6.7...........518.........1.4.5...7.....6.....2......2.....4.....8.3.....5.....'
 slist[19]= '1.....3.8.7.4..............2.3.1...........958.........5.6...7.....8.2...4.......'
 
-for i,sudo in enumerate(slist):
-    print('*** sudoku {0} ***'.format(i))
-    print(sudo)
-    d = parse_string_to_dict(sudo)
-    start_time = time.time()
-    solve(d)
-    end_time = time.time()
-    hours, rem = divmod(end_time-start_time, 3600)
-    minutes, seconds = divmod(rem, 60)
-    print("duration [hh:mm:ss.ddd]: {:0>2}:{:0>2}:{:06.3f}".format(int(hours),int(minutes),seconds))
-    print()
+if __name__ == '__main__':
+    for i,sudo in enumerate(slist):
+        print('*** sudoku {0} ***'.format(i))
+        print(sudo)
+        d = parse_string_to_dict(sudo)
+        start_time = time.time()
+        solve(d)
+        end_time = time.time()
+        hours, rem = divmod(end_time-start_time, 3600)
+        minutes, seconds = divmod(rem, 60)
+        print("duration [hh:mm:ss.ddd]: {:0>2}:{:0>2}:{:06.3f}".format(int(hours),int(minutes),seconds))
+        print()
