@@ -38,19 +38,19 @@ def tests(permutation):
 
     for (key, value) in permutation.items():
         index += 1
-        test_neighbours = neighbours[index]
         neighbour_values = [permutation[i] for i in neighbours[index]]
+
         if value == "":
             continue
         if value in [permutation[i] for i in neighbours[index]]:
             return False
-        if value == 'A' and 'K' not in [permutation[i] for i in neighbours[index]]:
+        if value == 'A' and 'K' not in neighbour_values and '' not in neighbour_values:
             return False
-        if value == 'K' and 'Q' not in [permutation[i] for i in neighbours[index]]:
+        if value == 'K' and 'Q' not in neighbour_values and '' not in neighbour_values:
             return False
-        if value == 'Q' and 'J' not in [permutation[i] for i in neighbours[index]]:
+        if value == 'Q' and 'J' not in neighbour_values and '' not in neighbour_values:
             return False
-        if value == 'A' and 'Q' in [permutation[i] for i in neighbours[index]]:
+        if value == 'A' and 'Q' in neighbour_values:
             return False
     # Returns true if the for loop has finished
     return True
@@ -82,7 +82,6 @@ def brute_force(valid_indices, cards):
         count += 1
         if tests(dict_permutation):
             print(permutation)
-            print(count)
 
 
 if __name__ == '__main__':
@@ -91,4 +90,4 @@ if __name__ == '__main__':
     valid_indices = [2, 4, 5, 6, 9, 10, 11, 14]
     start_dictionary = dict(zip(valid_indices, ["", "", "", "", "", "", "", ""]))
 
-    brute_force(start_dictionary, cards)
+    solve(start_dictionary, cards, -1)
