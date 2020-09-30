@@ -69,10 +69,11 @@ for r in row_has_1_at:
 row_valid = NR_OF_ROWS * [1]
 col_valid = NR_OF_COLS * [1]
 
-print(row_has_1_at)
-print(col_has_1_at)
-print(row_valid)
-print(col_valid)
+#print(row_has_1_at)
+#print(col_has_1_at)
+#print(row_valid)
+#print(col_valid)
+#print("tri:", triominoes)
 
 all_solutions = []
 
@@ -85,49 +86,55 @@ def cover(r, row_valid, col_valid):
     pass
 
 def solve(row_valid, col_valid, solution):
-    if all(value == 0 for value in col_valid):
+    if all(value == 0 for value in col_valid) and all(value == 0 for value in row_valid):
         print (solution)
         print("finished? exact cover is found ?")
-    else:
-        #Select column
-        smallestcolumn_size = 100
-        smallestcolumn_index = 100
-        location_of_1s = []
+        all_solutions.append(solution)
+        return True
 
-        a=-1
-        for x in col_valid:
-            a = a+1
-            if x == 1:
-                length = len(col_has_1_at[a])
-                if length < smallestcolumn_size:
-                    smallestcolumn_size = length
-                    smallestcolumn_index = a
-                    location_of_1s = col_has_1_at[a]
+    if all(value == 0 for value in col_valid) or all(value == 0 for value in row_valid):
+        return False
 
-        print(smallestcolumn_index, smallestcolumn_size, location_of_1s )   
+    #Select column
+    smallestcolumn_size = 100
+    #smallestcolumn_index = 100
+    column_location_of_1s = []
 
-        #drie rijen met 1 op dezelfde plek als kleinste colomn
-        for y in location_of_1s:
-            #cover row r and include r in the partial solution
-            solution.append(y)
-            row_valid[y] = 0
+    a=-1
+    for x in col_valid:
+        a = a+1
+        if x == 1:
+            #get smallest nr of 1 in colomn
+            length = len(col_has_1_at[a])
+            if length < smallestcolumn_size:
+                smallestcolumn_size = length
+                smallestcolumn_index = a
+                column_location_of_1s = col_has_1_at[a]
 
-            #cover all rows that overlap with row r
+    #print(smallestcolumn_index, smallestcolumn_size, column_location_of_1s )   
+    
 
-
-            #repeat recusively on reduced matrix
-        print(solution)
-
-  
+    row_valid_copy = list(row_valid)
+    col_valid_copy = list(col_valid)
+    #drie rijen met 1 op dezelfde plek als kleinste colomn
+    for row_index in column_location_of_1s:
         
-      
-       
-
-
-
-
-
+        partialsolution = list(solution)
+        partialsolution.append(row_index)
         
+        row_location_of1s = row_has_1_at[row_index]
+        #voor elke kolom 
+        for col_index in row_location_of1s:
+            rij= col_has_1_at[col_index]
+            col_valid_copy[col_index] = 0
+                        
+            for rijindex in rij:
+                row_valid_copy[rijindex] = 0
+            
+        if solve(row_valid_copy,col_valid_copy,partialsolution):
+            solution.append(row_index)   
+    
+    return False
 
 
     # using Algoritm X, find all solutions (= set of rows) given valid/uncovered rows and cols
@@ -157,10 +164,3 @@ for solution in all_solutions:
     for i in D:
         print(i)
 
-
-
-#1: kies colomn met minste waarden
-#2: kies een rij met een 1 in de eerder gekozen colomn positie
-
-#cover (verwijder) de rijen die overlappen met de eerder gekozen rij
-# cover alle colomen met een 1 in de eerder gekozen rij
